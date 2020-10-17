@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<LinearLayout
+    android:id="@+id/baseLayout"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="20dp"
+        android:text="사용자 이름"
+        android:id="@+id/tvName"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="20dp"
+        android:text="이메일"
+        android:id="@+id/tvEmail"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="여기를 클릭해주세요"
+        android:id="@+id/button1"/>
+
+
+</LinearLayout>
