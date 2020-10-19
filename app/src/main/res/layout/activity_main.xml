@@ -1,31 +1,16 @@
 <?xml version="1.0"?>
-<LinearLayout
-    android:id="@+id/baseLayout"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textSize="20dp"
-        android:text="사용자 이름"
-        android:id="@+id/tvName"/>
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textSize="20dp"
-        android:text="이메일"
-        android:id="@+id/tvEmail"/>
+        <EditText android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/edtUrl" android:singleLine="true" android:hint="URL을 입력하세요." android:layout_weight="1"> </EditText>
 
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="여기를 클릭해주세요"
-        android:id="@+id/button1"/>
+        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/btnGo" android:text="이동"/>
 
+        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/btnBack" android:text="이전"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <WebView android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/webView1" android:clickable="true"/>
+
+</LinearLayout> 
