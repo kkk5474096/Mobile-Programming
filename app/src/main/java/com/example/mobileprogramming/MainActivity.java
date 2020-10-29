@@ -1,58 +1,71 @@
-package com.example.myapplication;
+package com.example.mobileprogramming;
 
+import java.io.File;
+
+import android.os.Environment;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.EditText;
-
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    EditText edtUrl;
-    Button btnGo, btnBack;
-    WebView web;
+    Button btnPrev, btnNext;
+    myPictureView myPicture;
+    TextView tv_number;
+    int curNum, length;
+    File[] imageFiles;
+    String imageFname;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.web);
+        setTitle("핸드폰 이미지 뷰어");
+        ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.WRITE_EXTERNAL_STORAGE},MODE_PRIVATE);
 
-        edtUrl = (EditText) findViewById(R.id.edtUrl);
-        btnGo = (Button) findViewById(R.id.btnGo);
-        btnBack = (Button) findViewById(R.id.btnBack);
-        web = (WebView) findViewById(R.id.webView1);
+        tv_number = (TextView) findViewById(R.id.tv_number);
+        btnPrev = (Button) findViewById(R.id.btnPrev);
+        btnNext = (Button) findViewById(R.id.btnNext);
+        myPicture = (myPictureView) findViewById(R.id.myPictureView1);
 
-        web.setWebViewClient(new CookWebViewClient());
+        imageFiles = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath()+"/Pictures").listFiles();
+        length = imageFiles.length;
+        imageFname = imageFiles[0].toString();
+        myPicture.imagePath=imageFname;
 
-        WebSettings webSet = web.getSettings();
-        webSet.setBuiltInZoomControls(true);
+        tv_number.setText((curNum + 1) + "/" + length);
 
-        btnGo.setOnClickListener(new View.OnClickListener() {
+        btnPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                web.loadUrl(edtUrl.getText().toString());
+                if (curNum == 0) {
+                    curNum = imageFiles.length - 1;
+                } else {
+                    curNum--;
+                }
+                imageFname = imageFiles[curNum].toString();
+                myPicture.imagePath = imageFname;
+                myPicture.invalidate();
+                tv_number.setText((curNum + 1) + "/" + length);
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                web.goBack();
+                if (curNum == imageFiles.length - 1) {
+                    curNum = 0;
+                } else {
+                    curNum++;
+                }
+                imageFname = imageFiles[curNum].toString();
+                myPicture.imagePath = imageFname;
+                myPicture.invalidate();
+                tv_number.setText((curNum + 1) + "/" + length);
             }
         });
 
     }
-
-    class CookWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return super.shouldOverrideUrlLoading(view, url);
-        }
-    }
-
 }
