@@ -1,38 +1,63 @@
 <?xml version="1.0"?>
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:id="@+id/iconLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text=" 이전 그림 "
-            android:layout_weight="3"
-            android:id="@+id/btnPrev"/>
+        <ImageButton
+            android:id="@+id/ibZoomin"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/zoom_in" />
 
-        <TextView
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/tv_number"/>
+        <ImageButton
+            android:id="@+id/ibZoomout"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/zoom_out" />
 
-         <Button
-             android:layout_height="wrap_content"
-             android:layout_width="wrap_content"
-             android:text=" 다음 그림 "
-             android:layout_weight="3"
-             android:id="@+id/btnNext"/>
+        <ImageButton
+            android:id="@+id/ibRotate"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/rotate" />
+
+        <ImageButton
+            android:id="@+id/ibBright"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/bright" />
+
+        <ImageButton
+            android:id="@+id/ibDark"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/dark" />
+
+        <ImageButton
+            android:id="@+id/ibGray"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/gray" />
 
     </LinearLayout>
 
-    <com.example.mobileprogramming.myPictureView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/myPictureView1"/>
+    <LinearLayout
+        android:id="@+id/pictureLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="9"
+        android:gravity="center"
+        android:orientation="horizontal"></LinearLayout>
 
 </LinearLayout>
