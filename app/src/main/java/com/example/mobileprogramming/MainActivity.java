@@ -1,129 +1,85 @@
 package com.example.mobileprogramming;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Gallery;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
-
-    ImageButton ibZoomin, ibZoomout, ibRotate, ibBright, ibDark, ibGray;
-    MyGraphicView graphicView;
-
-    static float scaleX = 1, scaleY = 1;
-    static float angle = 0;
-    static float color = 1;
-    static float satur = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("미니 포토샵");
+        setTitle("갤러리 영화 포스터");
 
-        LinearLayout pictureLayout = (LinearLayout) findViewById(R.id.pictureLayout);
-        graphicView = (MyGraphicView) new MyGraphicView(this);
-        pictureLayout.addView(graphicView);
+        Gallery gallery = (Gallery) findViewById(R.id.gallery1);
 
-        clickIcons();
+        MyGalleryAdapter galAdapter = new MyGalleryAdapter(this);
+        gallery.setAdapter(galAdapter);
     }
 
-    private void clickIcons() {
-        ibZoomin = (ImageButton) findViewById(R.id.ibZoomin);
-        ibZoomin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                scaleX = scaleX + 0.2f;
-                scaleY = scaleY + 0.2f;
-                graphicView.invalidate();
-            }
-        });
+    public class MyGalleryAdapter extends BaseAdapter {
 
-        ibZoomout = (ImageButton) findViewById(R.id.ibZoomout);
-        ibZoomout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                scaleX = scaleX - 0.2f;
-                scaleY = scaleY - 0.2f;
-                graphicView.invalidate();
-            }
-        });
+        Context context;
+        Integer[] posterID = { R.drawable.mov1, R.drawable.mov2,
+                R.drawable.mov3, R.drawable.mov4, R.drawable.mov5,
+                R.drawable.mov6, R.drawable.mov7, R.drawable.mov8,
+                R.drawable.mov9, R.drawable.mov10 };
+        String[] posterName = { "반도", "아이언맨3",
+                "어벤져스", "어바웃타임", "인터스텔라",
+                "다크나이트 라이즈", "토르: 천둥의신", "부산행",
+                "괴물", "도둑들" };
 
-        ibRotate = (ImageButton) findViewById(R.id.ibRotate);
-        ibRotate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                angle = angle + 20;
-                graphicView.invalidate();
-            }
-        });
-
-        ibBright = (ImageButton) findViewById(R.id.ibBright);
-        ibBright.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                color = color + 0.2f;
-                graphicView.invalidate();
-            }
-        });
-
-        ibDark = (ImageButton) findViewById(R.id.ibDark);
-        ibDark.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                color = color - 0.2f;
-                graphicView.invalidate();
-            }
-        });
-
-        ibGray = (ImageButton) findViewById(R.id.ibGray);
-        ibGray.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (satur == 0)
-                    satur = 1;
-                else
-                    satur = 0;
-                graphicView.invalidate();
-            }
-        });
-
-    }
-
-    private static class MyGraphicView extends View {
-        public MyGraphicView(Context context) {
-            super(context);
+        public MyGalleryAdapter(Context c) {
+            context = c;
         }
 
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
+        public int getCount() {
+            return posterID.length;
+        }
 
-            int cenX = this.getWidth() / 2;
-            int cenY = this.getHeight() / 2;
-            canvas.scale(scaleX, scaleY, cenX, cenY);
-            canvas.rotate(angle, cenX, cenY);
+        public Object getItem(int arg0) {
+            return null;
+        }
 
-            Paint paint = new Paint();
-            float[] array = {color, 0, 0, 0, 0, 0, color, 0, 0, 0, 0, 0,
-                    color, 0, 0, 0, 0, 0, 1, 0};
-            ColorMatrix cm = new ColorMatrix(array);
+        public long getItemId(int position) {
+            return 0;
+        }
 
-            if (satur == 0)
-                cm.setSaturation(satur);
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView imageview = new ImageView(context);
+            imageview.setLayoutParams(new Gallery.LayoutParams(200, 300));
+            imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageview.setPadding(5, 5, 5, 5);
+            imageview.setImageResource(posterID[position]);
 
-            paint.setColorFilter(new ColorMatrixColorFilter(cm));
+            final int pos = position;
+            imageview.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    ImageView ivPoster = (ImageView) findViewById(R.id.ivPoster);
+                    ivPoster.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    ivPoster.setImageResource(posterID[pos]);
 
-            Bitmap picture = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.iu);
-            int picX = (this.getWidth() - picture.getWidth()) / 2;
-            int picY = (this.getHeight() - picture.getHeight()) / 2;
-            canvas.drawBitmap(picture, picX, picY, paint);
+                    Toast toast = new Toast(MainActivity.this);
+                    View toastView = View.inflate(MainActivity.this, R.layout.toast1, null);
+                    TextView toastText = toastView.findViewById(R.id.toastText1);
+                    toastText.setText(posterName[pos]);
+                    toast.setView(toastView);
+                    toast.show();
+                    return false;
+                }
+            });
 
-            picture.recycle();
+            return imageview;
         }
     }
 }
