@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:text="타이틀 : 강민"
+        android:text="Title: KANGMIN"
         android:textStyle="bold"
 
 
@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="이름:"
+            android:text="Name:"
             android:textSize="20sp"
             />
 
@@ -33,7 +33,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="확인"
+            android:text="O.K."
             />
 
     </LinearLayout>
@@ -59,7 +59,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="확인"
+            android:text="O.K."
             />
 
     </LinearLayout>
@@ -85,7 +85,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="확인"
+            android:text="O.K."
             />
 
     </LinearLayout>
@@ -100,14 +100,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="로그인"
+            android:text="login"
             />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="회원가입"
+            android:text="membership"
             />
 
     </LinearLayout>
@@ -115,8 +115,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="English"
+        android:text="한글"
         android:layout_marginTop="30dp"
-        android:id="@+id/btn_english"
+        android:id="@+id/btn_korean"
         />
 </LinearLayout>
