@@ -5,37 +5,21 @@
     android:layout_height="match_parent"
     >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/view1"
-        android:background="@color/colorPrimaryDark"
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="대화상자 띄우기"
+        android:id="@+id/button1"
+        android:layout_gravity="center"
         />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/view2"
-        android:background="@color/colorAccent"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림대화상자"
+        android:id="@+id/textview"
         />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/text"
-            />
-
-
-
-    </ScrollView>
 
 
 
