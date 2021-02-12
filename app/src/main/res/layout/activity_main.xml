@@ -5,21 +5,11 @@
     android:layout_height="match_parent"
     >
 
-    <Button
+    <com.example.mobileprogramming.BitmapButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="대화상자 띄우기"
-        android:id="@+id/button1"
-        android:layout_gravity="center"
+        android:text="안녕하세요"
         />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="알림대화상자"
-        android:id="@+id/textview"
-        />
-
 
 
 
