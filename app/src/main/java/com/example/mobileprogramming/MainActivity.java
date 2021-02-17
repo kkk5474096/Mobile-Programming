@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,18 +28,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SubActivity.class);
+
+                ArrayList<String> names = new ArrayList<String>();
+                names.add("김진수");
+                names.add("황수연");
+                intent.putExtra("names", names);
                 startActivityForResult(intent, 102);
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 102) {
-            String name = data.getStringExtra("name");
-            Toast.makeText(getApplicationContext(), "메뉴화면으로부터의 이름 : " + name, Toast.LENGTH_LONG).show();
-        }
     }
 }

@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 
 public class SubActivity extends AppCompatActivity {
 
@@ -25,14 +28,25 @@ public class SubActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("name", "mike");
-                setResult(Activity.RESULT_OK, intent);
                 finish();
 
             }
         });
 
+        Intent passedIntent = getIntent();
+        processIntent(passedIntent);
+
 
     }
+
+    private void processIntent(Intent intent) {
+        if (intent != null) {
+            ArrayList<String> names = (ArrayList<String>) intent.getSerializableExtra("names");
+            if (names != null) {
+                Toast.makeText(getApplicationContext(), "전달받은 이름 리스트 개수: " + names.size(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
 }
