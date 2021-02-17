@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
                 names.add("김진수");
                 names.add("황수연");
                 intent.putExtra("names", names);
+
+                SimpleData data = new SimpleData(100,"Hello");
+                intent.putExtra("data", data);
+
                 startActivityForResult(intent, 102);
             }
         });
