@@ -41,5 +41,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+       Intent passedIntent = getIntent();
+       processCommand(passedIntent);
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        processCommand(intent);
+        super.onNewIntent(intent);
+
+    }
+
+    private void processCommand(Intent intent) {
+        if (intent != null) {
+            String command = intent.getStringExtra("command");
+            String name = intent.getStringExtra("name");
+
+            Toast.makeText(getApplicationContext(), "서비스로부터 전달받은 데이터 : " + command + "," + name, Toast.LENGTH_LONG).show();
+        }
     }
 }
