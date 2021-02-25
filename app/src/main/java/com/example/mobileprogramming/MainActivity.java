@@ -2,14 +2,21 @@ package com.example.mobileprogramming;
 
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+
+import com.example.mobileprogramming.fragment.Fragment1;
+import com.example.mobileprogramming.fragment.Fragment2;
+import com.example.mobileprogramming.fragment.Fragment3;
+import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
+    Fragment fragment1;
+    Fragment fragment2;
+    Fragment fragment3;
 
 
     @Override
@@ -17,32 +24,50 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    }
+        fragment1 = new Fragment1();
+        fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment1).commit();
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int curId = item.getItemId();
-        switch (curId) {
-            case R.id.menu_refresh:
-                Toast.makeText(this, "새로고침 메뉴 클릭됨", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.menu_search:
-                Toast.makeText(this, "검색 메뉴 클릭됨", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.menu_setting:
-                Toast.makeText(this, "설정 메뉴 클릭됨", Toast.LENGTH_LONG).show();
-                break;
-            default:
-                break;
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs.addTab(tabs.newTab().setText("친구"));
+        tabs.addTab(tabs.newTab().setText("일대일채팅"));
+        tabs.addTab(tabs.newTab().setText("기타"));
 
-        }
-        return super.onOptionsItemSelected(item);
+        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+
+                Fragment selected = null;
+                if (position == 0) {
+                    selected = fragment1;
+                } else if (position == 1) {
+                    selected = fragment2;
+                } else if (position == 2) {
+                    selected = fragment3;
+                }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, selected).commit();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+
+
     }
 }
