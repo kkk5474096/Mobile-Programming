@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment3 fragment3;
     MoviePagerAdapter adapter;
     TabLayout tabs;
+    ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new MoviePagerAdapter(getSupportFragmentManager());
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
         pager.setOffscreenPageLimit(3);
 
         adapter.addItem(fragment1);
@@ -49,6 +50,24 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem(fragment3);
 
         pager.setAdapter(adapter);
+
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                pager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 }
