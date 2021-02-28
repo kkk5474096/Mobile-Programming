@@ -5,5 +5,5 @@ import android.widget.Button;
 
 public interface FragmentCallback {
 
-    public void onFragmentSelected(int position, Bundle bundle);
+    public void onCommand(String command, String data);
 }
