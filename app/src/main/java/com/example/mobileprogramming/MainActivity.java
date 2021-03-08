@@ -1,56 +1,55 @@
 package com.example.mobileprogramming;
 
+
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.mobileprogramming.fragment.Fragment1;
-import com.example.mobileprogramming.fragment.Fragment2;
-import com.example.mobileprogramming.fragment.Fragment3;
-import com.example.mobileprogramming.fragment.FragmentCallback;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity implements FragmentCallback {
+public class MainActivity extends AppCompatActivity {
 
-
-    Fragment1 fragment1;
+    TextView textView;
     Button button;
-
+    Button button1;
+    int value = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fragment1 = new Fragment1();
-        button = findViewById(R.id.button1);
+        textView = findViewById(R.id.textView);
+        button = findViewById(R.id.button);
+        button1 = findViewById(R.id.button1);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fragment1 != null) {
-                    fragment1.onCommandFromActivity("show", "액티비티로부터 전달됨");
-                }
+                BackgroundThread thread = new BackgroundThread();
+                thread.start();
             }
         });
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment1).commit();
 
-
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText("현재 값 : " + value);
+            }
+        });
     }
 
-    public void onCommand(String command,String data){
-        button.setText(data);
-
+    class BackgroundThread extends Thread {
+        boolean running = false;
+        public void run() {
+            running = true;
+            while (running){
+                value += 1;
+                try{
+                    Thread.sleep(1000);
+                } catch (Exception e){}
+            }
+        }
     }
 }
