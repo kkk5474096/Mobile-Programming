@@ -2,10 +2,13 @@ package com.example.mobileprogramming;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     Button button;
     Button button1;
-    int value = 0;
+    ValueHandler handler = new ValueHandler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +39,39 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText("현재 값 : " + value);
             }
         });
     }
 
     class BackgroundThread extends Thread {
         boolean running = false;
+        int value = 0;
         public void run() {
             running = true;
             while (running){
                 value += 1;
+
+                Message message = handler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putInt("value", value);
+                message.setData(bundle);
+                handler.sendMessage(message);
+
                 try{
                     Thread.sleep(1000);
                 } catch (Exception e){}
             }
+        }
+    }
+
+    class ValueHandler extends Handler {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+
+            Bundle bundle = msg.getData();
+            int value = bundle.getInt("value");
+            textView.setText("현재 값 : " + value);
         }
     }
 }
