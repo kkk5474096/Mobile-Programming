@@ -1,85 +1,56 @@
 package com.example.mobileprogramming;
 
 
-import android.os.AsyncTask;
+
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 public class MainActivity extends AppCompatActivity {
 
-    TextView textView;
-    Button button;
-    Button button1;
-    //    ValueHandler handler = new ValueHandler();
-    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textView);
-        button = findViewById(R.id.button);
-        button1 = findViewById(R.id.button1);
-
+        Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ValueTask task = new ValueTask();
-                task.execute("시작");
+                ClientThread thread = new ClientThread();
+                thread.start();
             }
         });
-//
-//        button1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
     }
 
-    class ValueTask extends AsyncTask<String, Integer, Integer> {
-        int value = 0;
-        boolean running = false;
-        @Override
-        protected Integer doInBackground(String... strings) {
-            running = true;
-            while (running) {
-                if (value >= 10) {
-                    break;
-                }
-                value += 1;
+    class ClientThread extends Thread {
+        public void run() {
+            String host = "localhost";
+            int port = 5001;
 
-                publishProgress(value);
+            try {
+                Socket socket = new Socket(host, port);
 
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                }
+                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                outputStream.writeObject("안녕!");
+                outputStream.flush();
+                Log.d("ClientThread", "서버로 보냄");
+
+                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                Object input = inputStream.readObject();
+                Log.d("ClientThread", "받은 데이터 : " + input);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return value;
         }
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-
-            textView.setText("현재값 : " + value);
-        }
-
-        @Override
-        protected void onPostExecute(Integer s) {
-            super.onPostExecute(s);
-
-            Toast.makeText(getApplicationContext(), "완료됨.", Toast.LENGTH_LONG).show();
-        }
-
     }
-
 }
