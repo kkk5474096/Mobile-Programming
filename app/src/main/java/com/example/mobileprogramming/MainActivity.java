@@ -3,9 +3,11 @@ package com.example.mobileprogramming;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
+    Button button;
+    TextView textView;
+    Handler handler = new Handler();
 
 
     @Override
@@ -22,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = findViewById(R.id.button);
+        button = findViewById(R.id.button);
+        textView = findViewById(R.id.textView);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,8 +53,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("ClientThread", "서버로 보냄");
 
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                Object input = inputStream.readObject();
+                final Object input = inputStream.readObject();
                 Log.d("ClientThread", "받은 데이터 : " + input);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText("받은 데이터 : " + input);
+                    }
+                });
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
