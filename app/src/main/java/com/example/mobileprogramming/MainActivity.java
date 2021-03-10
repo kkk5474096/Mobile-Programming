@@ -4,21 +4,28 @@ package com.example.mobileprogramming;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 
 public class MainActivity extends AppCompatActivity {
     Button button;
     TextView textView;
+    EditText editText;
+    String urlStr;
     Handler handler = new Handler();
 
 
@@ -29,44 +36,59 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         textView = findViewById(R.id.textView);
+        editText = findViewById(R.id.editText);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClientThread thread = new ClientThread();
+                urlStr = editText.getText().toString();
+                RequestThread thread = new RequestThread();
                 thread.start();
             }
         });
     }
-
-    class ClientThread extends Thread {
+    class RequestThread extends Thread {
         public void run() {
-            String host = "localhost";
-            int port = 5001;
 
-            try {
-                Socket socket = new Socket(host, port);
+            try{
+                URL url = new URL(urlStr);
 
-                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                outputStream.writeObject("안녕!");
-                outputStream.flush();
-                Log.d("ClientThread", "서버로 보냄");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                if (conn != null) {
+                    conn.setConnectTimeout(10000);
+                    conn.setRequestMethod("GET");
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
 
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                final Object input = inputStream.readObject();
-                Log.d("ClientThread", "받은 데이터 : " + input);
+                    int resCode = conn.getResponseCode();
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView.setText("받은 데이터 : " + input);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String line = null;
+
+                    while (true) {
+                        line = reader.readLine();
+                        if (line == null) {
+                            break;
+                        }
+                        println(line);
                     }
-                });
-
+                    reader.close();
+                    conn.disconnect();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void println(final String data) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.append(data + "\r");
+            }
+        });
+
     }
 }
