@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -25,7 +26,9 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
+    Button button2;
     TextView textView;
+    ImageView imageView;
 
 
 
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.button);
+        button2 = findViewById(R.id.button2);
+        imageView = findViewById(R.id.imageView);
         textView = findViewById(R.id.textView);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -43,9 +48,24 @@ public class MainActivity extends AppCompatActivity {
                 sendRequest();
             }
         });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendImageRequest();
+            }
+        });
+
         if (AppHelper.requestQueue == null) {
             AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
+    }
+
+    public void sendImageRequest() {
+        String url = "https://movie-phinf.pstatic.net/20121025_177/1351147245309lGKgU_JPEG/movie_image.jpg?type=m665_443_2";
+
+        ImageLoadTask task = new ImageLoadTask(url, imageView);
+        task.execute();
     }
 
     public void sendRequest() {
