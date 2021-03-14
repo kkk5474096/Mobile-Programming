@@ -26,11 +26,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
-    Button button2;
+
     TextView textView;
-    ImageView imageView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,38 +35,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.button);
-        button2 = findViewById(R.id.button2);
-        imageView = findViewById(R.id.imageView);
         textView = findViewById(R.id.textView);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequest();
+                requestMovieList();
             }
         });
 
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendImageRequest();
-            }
-        });
+
 
         if (AppHelper.requestQueue == null) {
             AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
     }
 
-    public void sendImageRequest() {
-        String url = "https://movie-phinf.pstatic.net/20121025_177/1351147245309lGKgU_JPEG/movie_image.jpg?type=m665_443_2";
+    public void requestMovieList() {
+        String url = "http://boostcourse-appapi.connect.or.kr:10000/movie/readMovieList?type=1";
 
-        ImageLoadTask task = new ImageLoadTask(url, imageView);
-        task.execute();
-    }
-
-    public void sendRequest() {
-        String url = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=f5eef3421c602c6cb7ea224104795888&targetDt=20120101";
 
         StringRequest request = new StringRequest(
                 Request.Method.GET,
@@ -89,13 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         println("에러 ->" + error.getMessage());
                     }
                 }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                return params;
-            }
-        };
+        );
         request.setShouldCache(false);
         AppHelper.requestQueue.add(request);
         println("요청 보냄");
@@ -103,17 +81,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void processResponse(String response) {
         Gson gson = new Gson();
-        MovieList movieList = gson.fromJson(response, MovieList.class);
+        ResponseInfo info = gson.fromJson(response, ResponseInfo.class);
+        if (info.code == 200) {
+            MovieList movieList = gson.fromJson(response, MovieList.class);
+            println("영화 갯수 : " + movieList.result.size());
 
-        if (movieList != null) {
-            int countMoive = movieList.boxOfficeResult.dailyBoxOfficeList.size();
-            println("응답받은 영화 갯수 : " + countMoive);
-            println("박스오피스 타입 : " + movieList.boxOfficeResult.boxofficeType);
+            for (int i = 0; i < movieList.result.size(); i++) {
+                MovieInfo movieInfo = movieList.result.get(i);
+                println("영화 #" + i + " -> " + movieInfo.id + ", " + movieInfo.title + ", " + movieInfo.grade);
+            }
         }
+
+
     }
 
     public void println(String data) {
-                textView.append(data + "\r");
+                textView.append(data + "\n");
             }
 
     }
