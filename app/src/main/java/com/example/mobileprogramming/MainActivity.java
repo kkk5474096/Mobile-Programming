@@ -2,32 +2,30 @@ package com.example.mobileprogramming;
 
 
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.TextView;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
     Button button;
-
+    Button button2;
+    Button button3;
+    Button button4;
+    EditText editText;
+    EditText editText2;
+    EditText editText3;
+    EditText editText4;
+    EditText editText5;
     TextView textView;
+    SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,64 +33,109 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.button);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
+        button4 = findViewById(R.id.button4);
+        editText = findViewById(R.id.editText);
+        editText2 = findViewById(R.id.editText2);
+        editText3 = findViewById(R.id.editText3);
+        editText4 = findViewById(R.id.editText4);
+        editText5 = findViewById(R.id.editText5);
         textView = findViewById(R.id.textView);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestMovieList();
+                String databaseName = editText.getText().toString();
+                openDatabase(databaseName);
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tableName = editText2.getText().toString().trim();
+                createTable(tableName);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editText3.getText().toString().trim();
+                String ageStr = editText4.getText().toString().trim();
+                String mobile = editText5.getText().toString().trim();
+
+                int age = -1;
+                try {
+                    age = Integer.parseInt(ageStr);
+                } catch (Exception e) {}
+                insertData(name, age, mobile);
+            }
+        });
+
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tableName = editText2.getText().toString().trim();
+                selectData(tableName);
             }
         });
 
 
+    }
 
-        if (AppHelper.requestQueue == null) {
-            AppHelper.requestQueue = Volley.newRequestQueue(getApplicationContext());
+    public void openDatabase(String databaseName) {
+        println("openDatabase() 호출됨.");
+        database = openOrCreateDatabase(databaseName, MODE_PRIVATE, null);
+        if( database != null) {
+            println("데이터베이스 오픈됨.");
         }
     }
 
-    public void requestMovieList() {
-        String url = "http://boostcourse-appapi.connect.or.kr:10000/movie/readMovieList?type=1";
+    public void createTable(String tableName) {
+        println("createTable() 호출됨.");
+        if (database != null) {
+            String sql = "create table " + tableName + "(_id integer PRIMARY KEY autoincrement, name text, age integer, mobile text)";
+            database.execSQL(sql);
 
-
-        StringRequest request = new StringRequest(
-                Request.Method.GET,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        println("응답 -> " + response);
-
-                        processResponse(response);
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        println("에러 ->" + error.getMessage());
-                    }
-                }
-        );
-        request.setShouldCache(false);
-        AppHelper.requestQueue.add(request);
-        println("요청 보냄");
+            println("테이블 생성됨.");
+        } else {
+            println("먼저 데이터베이스를 오픈하세요.");
+        }
     }
 
-    public void processResponse(String response) {
-        Gson gson = new Gson();
-        ResponseInfo info = gson.fromJson(response, ResponseInfo.class);
-        if (info.code == 200) {
-            MovieList movieList = gson.fromJson(response, MovieList.class);
-            println("영화 갯수 : " + movieList.result.size());
+    public void insertData(String name, int age, String mobile) {
+        println("insertData() 호출됨");
 
-            for (int i = 0; i < movieList.result.size(); i++) {
-                MovieInfo movieInfo = movieList.result.get(i);
-                println("영화 #" + i + " -> " + movieInfo.id + ", " + movieInfo.title + ", " + movieInfo.grade);
+        if(database != null) {
+            String sql = "insert into customer(name, age, mobile) values(?, ?, ?)";
+            Object[] params = {name, age, mobile};
+            database.execSQL(sql, params);
+
+            println("데이터 추가함.");
+        } else  {
+            println("먼저 데이터베이스를 오픈하세요.");
+        }
+    }
+
+    public void selectData(String tableName) {
+        println("selectData() 호출됨");
+
+        if (database != null) {
+            String sql = "select name, age, mobile from " + tableName;
+            Cursor cursor = database.rawQuery(sql, null);
+            println("조회된 데이터 개수 : " + cursor.getCount());
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToNext();
+                String name = cursor.getString(0);
+                int age = cursor.getInt(1);
+                String mobile = cursor.getString(2);
+
+                println("#" + i + " -> " + name + "," + age + "," + mobile);
             }
         }
-
-
     }
 
     public void println(String data) {
