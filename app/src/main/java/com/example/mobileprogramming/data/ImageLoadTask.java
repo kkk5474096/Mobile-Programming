@@ -1,4 +1,4 @@
-package com.example.mobileprogramming;
+package com.example.mobileprogramming.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -1,4 +1,4 @@
-package com.example.mobileprogramming;
+package com.example.mobileprogramming.data;
 
 
 //message: "movie readMovieList 성공",

@@ -1,6 +1,4 @@
-package com.example.mobileprogramming;
-
-import com.example.mobileprogramming.Movie;
+package com.example.mobileprogramming.data;
 
 import java.util.ArrayList;
 

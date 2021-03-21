@@ -1,4 +1,4 @@
-package com.example.mobileprogramming;
+package com.example.mobileprogramming.data;
 
 /*id:1,
         title:"꾼",
