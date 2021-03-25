@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme.NoActionBar">
 
         <provider
-            android:authorities="com.example.mobileprogramming"
+            android:authorities="com.example.mobileprogramming.MainActivity"
             android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true" >

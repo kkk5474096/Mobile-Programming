@@ -57,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
     }
     public void capture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(Build.VERSION.SDK_INT>=24){
-            try{
-                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                StrictMode.setVmPolicy(builder.build());
-                builder.detectFileUriExposure();
-            }catch(Exception e){}
-        }
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//        if(Build.VERSION.SDK_INT>=24){
+//            try{
+//                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//                StrictMode.setVmPolicy(builder.build());
+//                builder.detectFileUriExposure();
+//            }catch(Exception e){}
+//        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this, "com.example.mobileprogramming.MainActivity", file));
         startActivityForResult(intent,101);
     }
 
