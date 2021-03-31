@@ -1,171 +1,64 @@
 package com.example.mobileprogramming;
 
-
-
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
+import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
-
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
-    Button button2;
-    Button button3;
-    Button button4;
-    Button button5;
-    Button button6;
-    int position = 0;
-    MediaPlayer player;
-    MediaRecorder recorder;
-    String filename;
-    public static String url = "http://sites.google.com/site/ubiaccessmobile/sample_audio.amr";
-
+    ImageView imageView;
+    ArrayList<Drawable> imageList = new ArrayList<Drawable>();
+    Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        File sdcard = Environment.getExternalStorageDirectory();
-        File file = new File(sdcard, "recorded.mp4");
-        filename = file.getAbsolutePath();
-        Log.d("test", "저장할 파일명 : " + filename);
-
+        imageView = findViewById(R.id.imageView);
         button = findViewById(R.id.button);
-        button2 = findViewById(R.id.button2);
-        button3 = findViewById(R.id.button3);
-        button4 = findViewById(R.id.button4);
-        button5 = findViewById(R.id.button5);
 
+        Resources res = getResources();
+        imageList.add(res.getDrawable(R.drawable.kim));
+        imageList.add(res.getDrawable(R.drawable.duk));
+        imageList.add(res.getDrawable(R.drawable.sun));
+        imageList.add(res.getDrawable(R.drawable.iu));
+        imageList.add(res.getDrawable(R.drawable.web));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recordAudio();
+                testThread testThread = new testThread();
+                testThread.start();
             }
         });
+    }
 
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playAudio();
+    class testThread extends Thread {
+        public void run() {
+            int index = 0;
+            for (int i = 0; i < 100; i++) {
+                index = i % 5;
+                final Drawable drawable = imageList.get(index);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageDrawable(drawable);
+                    }
+                });
+
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {}
             }
-        });
-
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pauseAudio();
-            }
-        });
-
-        button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resumeAudio();
-            }
-        });
-
-        button5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopAudio();
-            }
-        });
-
-        button6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopRecording();
-            }
-        });
-
-    }
-
-    public void recordAudio() {
-        recorder = new MediaRecorder();
-
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-
-        recorder.setOutputFile(filename);
-
-        try {
-            recorder.prepare();
-            recorder.start();
-
-            Toast.makeText(this, "녹음시작됨.", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
-
-    public void stopRecording() {
-        if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-            recorder = null;
-
-            Toast.makeText(this, "녹음 중지됨.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void playAudio() {
-        try {
-            closePlayer();
-            player = new MediaPlayer();
-            player.setDataSource(filename);
-            player.prepare();
-            player.start();
-
-            Toast.makeText(this, "재생시작됨.", Toast.LENGTH_LONG).show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void closePlayer() {
-        if (player != null) {
-            player.release();
-            player = null;
-        }
-    }
-
-    public void pauseAudio() {
-        if (player != null) {
-            position = player.getCurrentPosition();
-            player.pause();
-
-            Toast.makeText(this, "일시정지됨.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void resumeAudio() {
-        if (player != null && !player.isPlaying()) {
-            player.seekTo(position);
-            player.start();
-
-            Toast.makeText(this, "재시작됨.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void stopAudio() {
-        if (player != null && player.isPlaying()) {
-            player.stop();
-
-            Toast.makeText(this, "중지됨.", Toast.LENGTH_LONG).show();
-        }
-    }
-
 }
 
